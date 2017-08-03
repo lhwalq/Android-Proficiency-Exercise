@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">proficiency</string>
+    <string name="text_net_no">网络不给力哦~</string>
+    <string name="action_settings">Settings</string>
+</resources>
