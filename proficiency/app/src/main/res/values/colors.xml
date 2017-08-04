@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#3C5480</color>
+    <color name="colorPrimaryDark">#294271</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="tab_select_text">#6CFFFFFF</color>
+    <color name="tab_select_text">#BDC7D7</color>
+    <color name="progress_bar_bg">#e6eaed</color>
+    <color name="progress_bar_progress">#020207</color>
+    <color name="tab_select_text_bg">#FFFF72</color>
+    <color name="text_small_color">#4A4A4A</color>
 
 </resources>

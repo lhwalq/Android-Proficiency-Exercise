@@ -3,18 +3,16 @@ package com.core.lib.base;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.FrameLayout;
 
 import com.core.lib.R;
 import com.core.lib.base.mvp.BasePresenter;
 import com.core.lib.base.mvp.BaseView;
-import com.core.lib.helper.Helper;
 
 /**
  * @author linhuan on 2017/4/22 上午10:57
  */
-public abstract class BaseLazyFragment<V extends BaseView, P extends BasePresenter> extends BaseFragment {
+public abstract class BaseLazyFragment<V extends BaseView, P extends BasePresenter> extends BaseFragment<V, P> {
 
     private boolean isInit = false;// 真正要显示的View是否已经被初始化（正常加载）
     private Bundle savedInstanceState;
@@ -23,58 +21,44 @@ public abstract class BaseLazyFragment<V extends BaseView, P extends BasePresent
     private FrameLayout layout;
     private boolean isStart = false;// 是否处于可见状态，in the screen
 
-    private P basePresenter;
-
     @Override
-    protected final void onCreateView(Bundle savedInstanceState) {
-        super.onCreateView(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         Bundle bundle = getArguments();
         if (null != bundle) {
             isLazyLoad = bundle.getBoolean(INTENT_BOOLEAN_LAZYLOAD, isLazyLoad);
         }
+    }
+
+    @Override
+    protected void onCreateView(Bundle savedInstanceState) {
+        super.onCreateView(savedInstanceState);
+
         // 判断是否懒加载
-        if (isLazyLoad) {
-            // 一旦isVisibleToUser==true即可对真正需要的显示内容进行加载
-            if (getUserVisibleHint() && !isInit) {
-                this.savedInstanceState = savedInstanceState;
+        if (!isInit) {
+            if (isLazyLoad) {
+                // 一旦isVisibleToUser==true即可对真正需要的显示内容进行加载
+                if (getUserVisibleHint() && !isInit) {
+                    this.savedInstanceState = savedInstanceState;
+                    onCreateViewLazy(savedInstanceState);
+                    init();
+                    isInit = true;
+                } else {
+                    // 进行懒加载
+                    layout = new FrameLayout(getContext());
+                    layout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+                    View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_lazy_loading, null);
+                    layout.addView(view);
+                    super.setContentView(layout);
+                }
+            } else {
+                // 不需要懒加载，开门江山，调用onCreateViewLazy正常加载显示内容即可
                 onCreateViewLazy(savedInstanceState);
                 init();
                 isInit = true;
-            } else {
-                // 进行懒加载
-                layout = new FrameLayout(getContext());
-                layout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_lazy_loading, null);
-                layout.addView(view);
-                super.setContentView(layout);
             }
-        } else {
-            // 不需要懒加载，开门江山，调用onCreateViewLazy正常加载显示内容即可
-            onCreateViewLazy(savedInstanceState);
-            init();
-            isInit = true;
         }
-
-
-        basePresenter = setPresenter();
-    }
-
-    protected abstract P setPresenter();
-
-    public P getBasePresenter() {
-        return basePresenter;
-    }
-
-    public void showViewStub(int rootId) {
-        ViewStub stub = (ViewStub) findViewById(rootId);
-        if (Helper.isNotNull(stub)) {
-            stub.inflate();
-        }
-    }
-
-    public View getViewStub(int rootId, int childId) {
-        ViewStub stub = (ViewStub) findViewById(rootId);
-        return stub.inflate().findViewById(childId);
     }
 
     @Override

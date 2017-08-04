@@ -18,6 +18,7 @@ public class TimeHelper {
 	
 	public static final String YYYYMMDD = "yyyy年MM月dd日";
 	public static final String MMDD = "MM-dd";
+	public static final String YYYYMMDDHHMMSSSSSS = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 	public static final String YYYYMMDDTWO = "yyyy-MM-dd";
 	public static final String YYYYMMDDHHMMSS = "yyyy-MM-dd HH:mm:ss";
 	public static final String HHMM = "HH:mm";
@@ -38,6 +39,25 @@ public class TimeHelper {
 	 */
 	public static long getTimestamp() {
 		return System.currentTimeMillis() / 1000;
+	}
+
+	/**
+	 * 时间转换
+	 *
+	 * @param time
+	 * @param oldTime
+	 * @param newTime
+	 * @return
+	 */
+	public static String timeConversion(String time, String oldTime, String newTime) {
+		try {
+			SimpleDateFormat dff = new SimpleDateFormat(oldTime);// 输入的被转化的时间格式
+			SimpleDateFormat df1 = new SimpleDateFormat(newTime);// 需要转化成的时间格式
+			Date date = dff.parse(time);
+			return df1.format(date);
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	/**

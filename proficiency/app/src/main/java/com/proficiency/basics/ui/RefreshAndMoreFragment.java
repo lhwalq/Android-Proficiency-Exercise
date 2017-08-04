@@ -6,8 +6,11 @@ import android.support.v7.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.core.lib.base.mvp.BasePresenter;
+import com.core.lib.helper.Helper;
 import com.proficiency.basics.bean.BaseAdapter;
 import com.proficiency.basics.bean.RefreshAndMoreView;
+
+import java.util.List;
 
 /**
  * @author linhuan on 2017/5/18 下午11:41
@@ -36,25 +39,52 @@ public abstract class RefreshAndMoreFragment<V extends RefreshAndMoreView, P ext
 
         rcvContent = findView(setRecyclerViewId());
         rcvContent.setLayoutManager(getRecyclerViewManager());
+        if (Helper.isNotNull(baseAdapter)) {
+            baseAdapter.setOnLoadMoreListener(this);
+            rcvContent.setAdapter(baseAdapter);
+        }
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+
+        loadData(page, PAGE_NUM);
     }
 
     protected abstract B setBaseAdapter();
 
+    public B getBaseAdapter() {
+        return baseAdapter;
+    }
+
     protected RecyclerView.LayoutManager getRecyclerViewManager() {
-        return new LinearLayoutManager(getActivity());
+        return new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
     }
 
     @Override
-    public void getListDataSucc() {
-
+    public void setListDataSucc(List dataList) {
+        if (isFirst) {
+            baseAdapter.setNewData(dataList);
+            isFirst = false;
+        } else {
+            baseAdapter.addData(dataList);
+        }
+        if (PAGE_NUM > dataList.size()) {
+            baseAdapter.loadComplete();
+        } else {
+            baseAdapter.hiedLoadingMore();
+        }
+        mrlContent.setRefreshing(false);
     }
 
     @Override
-    public void getListDataFail() {
+    public void setListDataFail() {
         page--;
         if (page < 1) {
             page = 1;
         }
+        mrlContent.setRefreshing(false);
     }
 
     protected int setPageNum() {

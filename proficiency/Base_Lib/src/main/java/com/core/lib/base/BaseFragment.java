@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 
+import com.core.lib.base.mvp.BasePresenter;
+import com.core.lib.base.mvp.BaseView;
 import com.core.lib.helper.DelayTaskHelper;
 import com.core.lib.helper.Helper;
 import com.core.lib.helper.ResourceHelper;
@@ -19,17 +22,46 @@ import java.lang.reflect.Field;
  *
  * @author linhuan 2015年7月11日 上午9:08:09
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment<V extends BaseView, P extends BasePresenter> extends Fragment {
 
 	private static final String TAG = BaseFragment.class.getSimpleName();
 
 	private View contentView;											// 内容
 	protected Activity act;
 
+	private P basePresenter;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		contentView = new View(act);
+
+		basePresenter = setPresenter();
+		if (Helper.isNotNull(basePresenter)) {
+			basePresenter.attachView(getMvpView());
+		}
+	}
+
+	public V getMvpView() {
+		return (V) this;
+	}
+
+	protected abstract P setPresenter();
+
+	public P getBasePresenter() {
+		return basePresenter;
+	}
+
+	public void showViewStub(int rootId) {
+		ViewStub stub = (ViewStub) findViewById(rootId);
+		if (Helper.isNotNull(stub)) {
+			stub.inflate();
+		}
+	}
+
+	public View getViewStub(int rootId, int childId) {
+		ViewStub stub = (ViewStub) findViewById(rootId);
+		return stub.inflate().findViewById(childId);
 	}
 
 	/**
@@ -97,6 +129,9 @@ public abstract class BaseFragment extends Fragment {
 
 	@Override
 	public void onDestroy() {
+		if (Helper.isNotNull(basePresenter)) {
+			basePresenter.detachView();
+		}
 		super.onDestroy();
 	}
 

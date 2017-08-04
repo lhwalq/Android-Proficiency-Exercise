@@ -3,6 +3,7 @@ package com.proficiency.view.home.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.core.lib.helper.ResourceHelper;
 import com.proficiency.R;
@@ -21,7 +22,7 @@ public class MainAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return SpecificFragment.newInstance(titleStr[position]);
+        return SpecificFragment.newInstance(titleStr[position], position);
     }
 
     @Override
@@ -34,4 +35,8 @@ public class MainAdapter extends FragmentPagerAdapter {
         return titleStr.length;
     }
 
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+//        super.destroyItem(container, position, object);
+    }
 }

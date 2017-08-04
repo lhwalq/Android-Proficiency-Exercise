@@ -1,10 +1,16 @@
 package com.proficiency.view.home;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.core.lib.helper.Helper;
+import com.core.lib.helper.ResourceHelper;
 import com.proficiency.R;
 import com.proficiency.basics.ui.RefreshAndMoreFragment;
+import com.proficiency.common.widget.RecycleViewDivider;
 import com.proficiency.view.home.adapter.SpecificAdapter;
 import com.proficiency.view.home.presenter.SpecificPresenter;
 import com.proficiency.view.home.view.SpecificView;
@@ -16,11 +22,13 @@ public class SpecificFragment extends RefreshAndMoreFragment<SpecificView, Speci
 
     private static final String TITLE = "title";
 
+    private boolean isFirstOpen = true;
     private String titleStr = "";
 
-    public static SpecificFragment newInstance(String title) {
+    public static SpecificFragment newInstance(String title, int position) {
         Bundle bundle = new Bundle();
         bundle.putString(TITLE, title);
+        bundle.putBoolean(INTENT_BOOLEAN_LAZYLOAD, 0 != position);
         SpecificFragment pageFragment = new SpecificFragment();
         pageFragment.setArguments(bundle);
         return pageFragment;
@@ -39,6 +47,21 @@ public class SpecificFragment extends RefreshAndMoreFragment<SpecificView, Speci
         if (Helper.isNotNull(bundle) && bundle.containsKey(TITLE)) {
             titleStr = bundle.getString(TITLE);
         }
+    }
+
+    @Override
+    protected void initView() {
+        super.initView();
+
+        rcvContent.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.HORIZONTAL, ResourceHelper.Dp2Px(0.5F), getResources().getColor(R.color.text_small_color)));
+        rcvContent.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void SimpleOnItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                if (i < getBaseAdapter().getData().size()) {
+                    DetailActivity.startDetailActivity(getActivity(), getBaseAdapter().getData().get(i));
+                }
+            }
+        });
     }
 
     @Override
@@ -63,6 +86,13 @@ public class SpecificFragment extends RefreshAndMoreFragment<SpecificView, Speci
 
     @Override
     protected void loadData(int page, int pageNum) {
-        getBasePresenter().getListData(titleStr, page, pageNum);
+        getBasePresenter().getListData(titleStr, page, pageNum, isFirstOpen);
+        isFirstOpen = false;
+    }
+
+    @Override
+    public void setListDataFail() {
+        super.setListDataFail();
+        isFirstOpen = true;
     }
 }

@@ -2,13 +2,15 @@ package com.proficiency.basics.bean;
 
 import com.core.lib.base.mvp.BaseView;
 
+import java.util.List;
+
 /**
  * @author linhuan on 2017/8/3 下午11:27
  */
-public interface RefreshAndMoreView extends BaseView {
+public interface RefreshAndMoreView<T extends BaseJson> extends BaseView {
 
-    void getListDataFail();
+    void setListDataFail();
 
-    void getListDataSucc();
+    void setListDataSucc(List<T> dataList);
 
 }

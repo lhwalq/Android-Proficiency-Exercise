@@ -4,9 +4,10 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
-import com.proficiency.basics.ui.AppBaseCompatActivity;
 import com.proficiency.R;
+import com.proficiency.basics.ui.AppBaseCompatActivity;
 import com.proficiency.view.home.adapter.MainAdapter;
 import com.proficiency.view.home.presenter.MainPresenter;
 import com.proficiency.view.home.view.MainView;
@@ -35,6 +36,12 @@ public class MainActivity extends AppBaseCompatActivity<MainView, MainPresenter>
         tabLayout = (TabLayout) findViewById(R.id.tl_top);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override

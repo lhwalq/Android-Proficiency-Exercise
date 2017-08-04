@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Base_Lib/Base_Lib.iml" filepath="$PROJECT_DIR$/Base_Lib/Base_Lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/brioalbanner/brioalbanner.iml" filepath="$PROJECT_DIR$/brioalbanner/brioalbanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/proficiency.iml" filepath="$PROJECT_DIR$/proficiency.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sql_lib/sql_lib.iml" filepath="$PROJECT_DIR$/sql_lib/sql_lib.iml" />
     </modules>
   </component>
 </project>

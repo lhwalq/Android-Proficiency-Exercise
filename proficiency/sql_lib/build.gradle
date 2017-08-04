@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java', 'src/main/java-gen']
+    }
+}
+
+dependencies {
+    compile 'org.greenrobot:greendao:3.2.0'
+    compile 'org.greenrobot:greendao-generator:3.2.0'
+}

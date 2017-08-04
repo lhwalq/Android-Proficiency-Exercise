@@ -61,10 +61,17 @@ public abstract class BaseCompatActivity<V extends BaseView, P extends BasePrese
         onCreateView(savedInstanceState);
 
         basePresenter = setPresenter();
+        if (Helper.isNotNull(basePresenter)) {
+            basePresenter.attachView(getMvpView());
+        }
 
         getAnimParams();
         initView();
         initData();
+    }
+
+    public V getMvpView() {
+        return (V) this;
     }
 
     public void showViewStub(int rootId) {
@@ -89,6 +96,9 @@ public abstract class BaseCompatActivity<V extends BaseView, P extends BasePrese
     protected void onDestroy() {
         super.onDestroy();
 
+        if (Helper.isNotNull(basePresenter)) {
+            basePresenter.detachView();
+        }
         AppManager.getAppManager().finishActivity(this);
     }
 
